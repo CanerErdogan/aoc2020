@@ -26,6 +26,7 @@ def cid_optional(passlist):
 
 print("Part 1 solution:", len(cid_optional(passlist)))
 
+
 def validation(passlist):
     re_hgt = re.compile(r"(?P<amount>\d+)(?P<unit>\w+)")
     re_hcl = re.compile(r"#[a-f0-9]{6}")
@@ -60,7 +61,7 @@ def validation(passlist):
 
         if not re_hcl.match(passport['hcl']):
             continue
-        
+
         if passport['ecl'] not in ecl_list:
             continue
 
