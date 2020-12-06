@@ -19,7 +19,7 @@ def count_any_yes(record):
 
 
 def count_all_yes(record):
-    batch = map(str.split, record)#.split()
+    batch = map(str.split, record)
     groups = []
     for group_answers in batch:
         group_answers = list(map(set, group_answers))
