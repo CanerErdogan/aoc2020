@@ -2,22 +2,22 @@ import re
 from functools import lru_cache
 
 with open('day07.txt') as fp:
-    batch = list(map(lambda entry: entry.strip('.'),
-        fp.read().strip().split('\n')))
+    # batch = list(map(lambda entry: entry.strip('.'),
+    #     fp.read().strip().split('\n')))
+    batch = fp.read().strip().split('\n')
     regex = re.compile(r"(?P<amount>\d+) (?P<color>[a-z ]+)")
 
+    line_regex = re.compile(r"(?P<color>[a-z ]+) bags contain (?P<content>.+).")
+    content_regex = re.compile(r"(?P<amount>\d+) (?P<color_inside>[a-z ]+) bag")
     bag_dict = dict()
     for line in batch:
-        rule = line.replace(' bags', '').replace(' bag', '').split(' contain')
-        bag = rule[0]
-        contents = rule[1].strip().split(', ')
+        color, content = line_regex.match(line).groups()
         content_dict = dict()
-        for content in contents:
-            if content != 'no other':
-                amount = int(regex.match(content).group('amount'))
-                color = regex.match(content).group('color')
-                content_dict.update({color: amount})
-        bag_dict[bag] = content_dict
+        if 'no other' not in content:
+            for item in content.split(', '):
+                amount, color_inside = content_regex.match(item).groups()
+                content_dict[color_inside] = int(amount)
+        bag_dict[color] = content_dict
 
 
 @lru_cache
