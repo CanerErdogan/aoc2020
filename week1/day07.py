@@ -2,11 +2,7 @@ import re
 from functools import lru_cache
 
 with open('day07.txt') as fp:
-    # batch = list(map(lambda entry: entry.strip('.'),
-    #     fp.read().strip().split('\n')))
     batch = fp.read().strip().split('\n')
-    regex = re.compile(r"(?P<amount>\d+) (?P<color>[a-z ]+)")
-
     line_regex = re.compile(r"(?P<color>[a-z ]+) bags contain (?P<content>.+).")
     content_regex = re.compile(r"(?P<amount>\d+) (?P<color_inside>[a-z ]+) bag")
     bag_dict = dict()
