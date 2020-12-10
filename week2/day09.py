@@ -2,11 +2,6 @@ with open('day09.txt') as fp:
     input_list = fp.read().strip().split('\n')
     numbers = list(map(int, input_list))
 
-# a = range(10)
-# for i in range(10 - 5):
-#     sliced = a[i : i + 5]
-#     target = a[i + 5]
-#     print(target, list(sliced))
 
 def first_weakness(numbers):
     for i in range(len(numbers) - 25):
@@ -31,7 +26,6 @@ def encryption_weakness(numbers, weakness):
             if sum(batch) == weakness:
                 return min(batch) + max(batch)
     
-
 
 weakness = first_weakness(numbers)
 print("First weakness:", weakness)
