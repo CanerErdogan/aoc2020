@@ -1,24 +1,29 @@
-with open('day10.txt') as fp:
-    adapters = list(map(int, fp.read().strip().split('\n')))
+from collections import defaultdict
 
-# adapters = [16, 10, 15, 5, 1, 11, 7, 19, 6, 12, 4]
+with open('day10.txt') as fp:
+    adapters = sorted(list(map(int, fp.read().splitlines())))
+    adapters.append(adapters[-1] + 3)
 
 def diff1x3(adapters):
     diff1 = diff3 = 0
     rating = 0
-    while True:
-        if rating + 1 in adapters:
-            rating += 1
+    for adapter in adapters:
+        diff = adapter - rating
+        if diff == 1:
             diff1 += 1
-            continue
-        if rating + 3 in adapters:
-            rating += 3
+        if diff == 3:
             diff3 += 1
-            continue
-        if rating == max(adapters):
-            rating += 3
-            diff3 += 1
-            return diff1 * diff3
+        rating = adapter
+    return diff1 * diff3
+
+
+def arrange(adapters):
+    attempts = defaultdict(int)
+    attempts[0] = 1
+    for adapter in adapters:
+        attempts[adapter] = sum([attempts[adapter - d] for d in [1, 2, 3]])
+    return attempts[adapters[-1]]
 
 
 print("Differences 1 times 3:", diff1x3(adapters))
+print("Possible arrangements:", arrange(adapters))
