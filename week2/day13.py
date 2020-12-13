@@ -1,8 +1,9 @@
+from functools import reduce
+from operator import mul
+
 with open('day13.txt') as fp:
     earliest = int(fp.readline())
     buses = fp.readline().strip().split(',')
-    earliest = 939
-    buses = '7,13,x,x,59,x,31,19'.split(',')
     ids = [int(bus) for bus in buses if bus != 'x']
 
     
@@ -16,22 +17,16 @@ def idxwait(buses):
 
 
 def offset_match(buses):
-    timestamp = 1000000#100000000000000
-    while timestamp % ids[0] != 0:
-        timestamp += 1
+    timestamp = 0
+    offsets = list(map(lambda bus: buses.index(str(bus)), ids))    
 
-    offsets = list(map(lambda bus: buses.index(str(bus)), ids))
     while True:
-        departs = [ids[0]]
-        for i in range(1, len(ids)):
-            if (timestamp + offsets[i]) % ids[i] != 0:
-                break
-            departs.append(ids[i])
-
+        departs = list(filter(lambda bus: \
+            (timestamp + offsets[ids.index(bus)]) % bus == 0, ids))
         if departs == ids:
-            return timestamp
-        timestamp += ids[0]
+            return timestamp + offsets[0]
+        timestamp += reduce(mul, departs)
 
 
-print(idxwait(buses))
-print(offset_match(buses))
+print("Earliest x wait:", idxwait(buses))
+print("Offsets match:", offset_match(buses))
