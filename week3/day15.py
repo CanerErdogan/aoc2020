@@ -1,9 +1,9 @@
-from collections import defaultdict
+from collections import defaultdict, deque
 
 
 def nth_number(n):
-    numbers = [0,3,6]#[0, 1, 5, 10, 3, 12, 19]
-    turns = defaultdict(list)
+    numbers = [0, 1, 5, 10, 3, 12, 19]
+    turns = defaultdict(lambda: deque(maxlen=2))
     turn = 1
     while numbers:
         spoken = numbers.pop(0)
@@ -11,7 +11,6 @@ def nth_number(n):
         turn += 1
     while turn <= n:
         if len(turns[spoken]) > 1:
-            turns[spoken].pop(0)
             spoken = turns[spoken][-1] - turns[spoken][-2]
         else:
             spoken = 0
