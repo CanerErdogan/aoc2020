@@ -1,4 +1,5 @@
 import re
+from collections import defaultdict
 
 with open('day16.txt') as fp:
     lines = [line for line in fp.read().splitlines() if line]
@@ -23,19 +24,50 @@ with open('day16.txt') as fp:
         nearby_tickets.append(tuple(map(int, line.split(','))))
 
 
-def scanning_error_rate():
+def scan_tickets():
     errors = []
-    for ticket in nearby_tickets:
+    discard = []
+    for i, ticket in enumerate(nearby_tickets):
         for value in ticket:
             valid = False
             for rule in rules.values():
-                if (rule[0][0] <= value <= rule[0][1] or rule[1][0] <= value <= rule[1][1]):
+                if (rule[0][0] <= value <= rule[0][1] or \
+                    rule[1][0] <= value <= rule[1][1]):
                     valid = True
                     break
             if not valid:
                 errors.append(value)
+                discard.append(i)
                 break
-    return sum(errors)
+    valid_tickets = [ticket for i, ticket in enumerate(nearby_tickets) if i not in discard]
+    return sum(errors), valid_tickets
 
 
-print("Scanning error rate:", scanning_error_rate())
+def multiply_departures(valid_tickets):
+    candidates = defaultdict(set)
+    for rule, limits in rules.items():
+        for i, key in enumerate(rules.keys()):
+            column = [fields[i] for fields in valid_tickets]
+            if all((limits[0][0] <= value <= limits[0][1] or \
+                    limits[1][0] <= value <= limits[1][1]) for value in column):
+                candidates[i].add(rule)
+
+    default_ticket = {key: None for key in rules.keys()}
+    cand_values = list(candidates.values())
+    keys_found = set()
+    for candidate in sorted(candidates.values(), key=len):
+        index = cand_values.index(candidate)
+        found_key = candidate.difference(keys_found).pop()
+        keys_found.add(found_key)
+        default_ticket[found_key] = index
+
+    result = 1
+    for key in default_ticket.keys():
+        if key.startswith('departure'):
+            result *= your_ticket[default_ticket[key]]
+    return result
+
+
+error, valid_tickets = scan_tickets()
+print("Scanning error rate:", error)
+print("Departures multiplied:", multiply_departures(valid_tickets))
