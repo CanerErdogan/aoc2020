@@ -53,10 +53,11 @@ def multiply_departures(valid_tickets):
                 candidates[i].add(rule)
 
     default_ticket = {key: None for key in rules.keys()}
+    cand_keys = list(candidates.keys())
     cand_values = list(candidates.values())
     keys_found = set()
-    for candidate in sorted(candidates.values(), key=len):
-        index = cand_values.index(candidate)
+    for candidate in sorted(cand_values, key=len):
+        index = cand_keys[cand_values.index(candidate)]
         found_key = candidate.difference(keys_found).pop()
         keys_found.add(found_key)
         default_ticket[found_key] = index
